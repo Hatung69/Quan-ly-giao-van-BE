@@ -24,6 +24,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 
 @Entity
 @Table(name = "tai_khoan", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
