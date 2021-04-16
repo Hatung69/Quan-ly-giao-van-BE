@@ -1,23 +1,13 @@
 package com.logistics.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.zip.DataFormatException;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,11 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
-import com.logistics.models.EQuyenHan;
 import com.logistics.models.NhanVien;
-import com.logistics.models.QuyenHan;
 import com.logistics.models.dto.NhanVienDTO;
-import com.logistics.repositories.QuyenHanRepository;
 import com.logistics.services.NhanVienService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -58,20 +45,6 @@ public class NhanVienController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		List<NhanVienDTO> _dsNhanVien = new ArrayList<NhanVienDTO>();
-//		try {
-//			List<NhanVien> dsNhanVien = nhanVienService.findAll();
-//			if (dsNhanVien.isEmpty()) {
-//				return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
-//			}
-//			dsNhanVien.forEach(nv -> {
-//				_dsNhanVien.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getGioiTinh(),
-//						nv.getNgaySinh(), nv.getDiaChi(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), null));
-//			});
-//			return new ResponseEntity<>(_dsNhanVien, HttpStatus.OK);
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
 	}
 
 	// Lấy nhân viên theo ID
@@ -88,17 +61,6 @@ public class NhanVienController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-//		final Optional<NhanVien> _nhanVien = nhanVienService.findById(idNhanVien);
-//		try {
-//			if (_nhanVien.isPresent()) {
-//				_nhanVien.get().setAvatar(decompressBytes(_nhanVien.get().getAvatar()));
-//				return new ResponseEntity<>(_nhanVien.get(), HttpStatus.OK);
-//			} else {
-//				return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//			}
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
 	}
 
 	// Tạo mới nhân viên
@@ -113,28 +75,6 @@ public class NhanVienController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		try {
-//			Gson gson = new Gson();
-//			NhanVienDTO nhanVienDTO = gson.fromJson(nhanVien, NhanVienDTO.class);
-//			nhanVienDTO.getTaiKhoan().setPassword(encoder.encode(nhanVienDTO.getTaiKhoan().getPassword()));
-//			/*
-//			 * Tài khoản chưa có ID nhưng sẽ tự insert vì CascadeType.PERSIST, chưa có quyền
-//			 * nên h phải set
-//			 */
-//			Set<QuyenHan> dsQuyen = new HashSet<>();
-//			QuyenHan quyenHan = quyenHanRepository.findByTenQuyen(EQuyenHan.ROLE_EMPLOYEE)
-//					.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
-//			dsQuyen.add(quyenHan);
-//			nhanVienDTO.getTaiKhoan().setQuyenHan(dsQuyen);
-//			NhanVien _nhanVien = new NhanVien(null, nhanVienDTO.getHoTen(), nhanVienDTO.getSdt(),
-//					nhanVienDTO.getGioiTinh(), nhanVienDTO.getNgaySinh(), nhanVienDTO.getDiaChi(),
-//					nhanVienDTO.getTrangThai(), compressBytes(avatarFile.getBytes()), new Date(), null, null,
-//					nhanVienDTO.getTaiKhoan());
-//
-//			return new ResponseEntity<>(nhanVienService.save(_nhanVien), HttpStatus.CREATED);
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
 	}
 
 	// Cập nhật thông tin nhân viên
@@ -151,36 +91,6 @@ public class NhanVienController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-//		final Optional<NhanVien> _nhanVien = nhanVienService.findById(idNhanVien);
-//		if (_nhanVien.isPresent()) {
-//			try {
-//				Gson gson = new Gson();
-//				NhanVienDTO nhanVienDTO = gson.fromJson(nhanVien, NhanVienDTO.class);
-//				if (avatarFile == null) {
-//					System.out.println("File ko cần update");
-//					_nhanVien.get().setHoTen(nhanVienDTO.getHoTen());
-//					_nhanVien.get().setSdt(nhanVienDTO.getSdt());
-//					_nhanVien.get().setGioiTinh(nhanVienDTO.getGioiTinh());
-//					_nhanVien.get().setNgaySinh(nhanVienDTO.getNgaySinh());
-//					_nhanVien.get().setDiaChi(nhanVienDTO.getDiaChi());
-//					_nhanVien.get().setTrangThai(nhanVienDTO.getTrangThai());
-//				} else {
-//					_nhanVien.get().setHoTen(nhanVienDTO.getHoTen());
-//					_nhanVien.get().setSdt(nhanVienDTO.getSdt());
-//					_nhanVien.get().setGioiTinh(nhanVienDTO.getGioiTinh());
-//					_nhanVien.get().setNgaySinh(nhanVienDTO.getNgaySinh());
-//					_nhanVien.get().setDiaChi(nhanVienDTO.getDiaChi());
-//					_nhanVien.get().setTrangThai(nhanVienDTO.getTrangThai());
-//					_nhanVien.get().setAvatar(compressBytes(avatarFile.getBytes()));
-//				}
-//				return new ResponseEntity<>(nhanVienService.save(_nhanVien.get()), HttpStatus.OK);
-//			} catch (Exception e) {
-//				return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//			}
-//		} else {
-//			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-//		}
-
 	}
 
 	// Xoá nhân viên theo ID

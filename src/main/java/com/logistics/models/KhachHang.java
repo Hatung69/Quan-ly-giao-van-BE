@@ -2,17 +2,12 @@ package com.logistics.models;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -26,37 +21,39 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
 @Entity
-@Table(name = "nhan_vien")
-public class NhanVien {
+@Table(name = "khach_hang")
+public class KhachHang {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	@Column(length = 50)
-	private String hoTen;
+	private String tenKhach;
+	@Column(length = 100)
+	private String tenCuaHang;
 	@Column(length = 15)
 	private String sdt;
-	@Column(length = 10)
-	private String gioiTinh;
-	@Temporal(TemporalType.DATE)
-	private Date ngaySinh;
 	@Column(length = 200)
 	private String diaChi;
+	@Column(length = 100)
+	private String email;
+	@Column(length = 15)
+	private String cmnd;
 	@Column(length = 50)
-	private String trangThai;
+	private String loaiKhachHang;
 
-	@Column(name = "picByte", columnDefinition = "LONGBLOB")
-	private byte[] avatar;
-
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lanCuoiDangNhap;
+	private int soDonHang;//
+	
+	@Column(length = 15)
+	private String soTaiKhoan;
+	
+	private double tienDoiSoat;//
+	
 	@CreationTimestamp
 	private Date thoiGianKhoiTao;
 	@UpdateTimestamp
-	private Date thoiGianChinhSua;
-	
-	@OneToOne(cascade = { CascadeType.REMOVE, CascadeType.PERSIST})
-	@JoinColumn(name = "tai_khoan_id", nullable = false)
-	private TaiKhoan taiKhoan;
+	private Date thoiGianCapNhat;
+
 }

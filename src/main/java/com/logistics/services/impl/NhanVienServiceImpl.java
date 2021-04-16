@@ -52,12 +52,15 @@ public class NhanVienServiceImpl implements NhanVienService {
 	@Override
 	public NhanVien layNhanVienTheoID(Long idNhanVien) {
 		NhanVien _nhanVien = nhanVienRepository.findById(idNhanVien)
-				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
+				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Nhân viên!"));
 		_nhanVien.setAvatar(decompressBytes(_nhanVien.getAvatar()));
 		return _nhanVien;
 	}
 
 	@Override
+	/*- Nhân viên:
+		+ Tài khoản:
+			+Quyền hạn*/
 	public NhanVien taoMoiNhanVien(NhanVienDTO nhanVienTaoMoi, MultipartFile avatarFile) {
 		nhanVienTaoMoi.getTaiKhoan().setPassword(encoder.encode(nhanVienTaoMoi.getTaiKhoan().getPassword()));
 
@@ -81,12 +84,9 @@ public class NhanVienServiceImpl implements NhanVienService {
 	}
 
 	@Override
-	/*- Nhân viên:
-		+ Tài khoản:
-			+Quyền hạn*/
 	public NhanVien capNhatNhanVien(NhanVienDTO nhanVienTaoMoi, MultipartFile avatarFile, Long idNhanVien) {
 		NhanVien _nhanVien = nhanVienRepository.findById(idNhanVien)
-				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
+				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Nhan viên!"));
 		try {
 			if (avatarFile == null) {
 				System.out.println("File ko cần update");

@@ -43,7 +43,7 @@ public class TaiKhoan {
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "taiKhoan_quyenHan", joinColumns = @JoinColumn(name = "tai_khoan_id"), inverseJoinColumns = @JoinColumn(name = "quyen_han_id"))
 	private Set<QuyenHan> quyenHan = new HashSet<QuyenHan>();
-	
+
 	public TaiKhoan(String username, String email, String password) {
 		this.username = username;
 		this.email = email;
