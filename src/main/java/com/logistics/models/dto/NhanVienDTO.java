@@ -2,7 +2,11 @@ package com.logistics.models.dto;
 
 import java.util.Date;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import com.logistics.models.TaiKhoan;
+import com.logistics.models.enu.ETrangThaiNhanVien;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,10 +23,10 @@ public class NhanVienDTO {
 	private Long id;
 	private String hoTen;
 	private String sdt;
+	private String diaChi;
 	private String gioiTinh;
 	private Date ngaySinh;
-	private String diaChi;
-	private String trangThai;
+	private ETrangThaiNhanVien trangThai;
 	private Date lanCuoiDangNhap;
 	
 	private TaiKhoan taiKhoan;

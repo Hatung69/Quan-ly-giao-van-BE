@@ -2,6 +2,8 @@ package com.logistics.models.dto;
 
 import java.util.Date;
 
+import com.logistics.models.enu.ETrangThaiShipper;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,17 +15,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class KhachHangDTO {
+public class ShipperDTO {
 	private Long id;
-	private String tenKhachHang;
-	private String tenCuaHang;
+	private String hoTen;
 	private String sdt;
 	private String diaChi;
 	private String email;
 	private String cmnd;
-	private String soTaiKhoan;
-	private int soDonHang = 0;
-	private String loaiKhachHang;
-
+	private int soDonHangDaNHan;
+	private ETrangThaiShipper trangThai;
+	
 	private Date thoiGianCapNhat;
 }

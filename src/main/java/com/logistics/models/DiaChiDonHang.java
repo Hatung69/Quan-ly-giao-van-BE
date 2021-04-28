@@ -2,38 +2,39 @@ package com.logistics.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.logistics.models.enu.EQuyenHan;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "quyen_han")
-public class QuyenHan {
+@Table(name = "dia_chi_don_hang")
+public class DiaChiDonHang {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	
-	@Enumerated(EnumType.STRING)
-	@Column(length = 20)
-	private EQuyenHan tenQuyen;
+	@Column(length = 50)
+	private String tinhThanh;
+	@Column(length = 50)
+	private String quanHuyen;
+	@Column(length = 50)
+	private String phuongXa;
+	@Column(length = 300)
+	private String moTaChiTiet;
 	
-	@Column(length = 100)
-	private String moTa;
 }

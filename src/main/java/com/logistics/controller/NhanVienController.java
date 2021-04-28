@@ -63,6 +63,22 @@ public class NhanVienController {
 
 	}
 
+	// Lấy ID Trạm trung chuyển từ nhân viên  theo Id Tài khoản
+	@GetMapping("/nhan-vien/tai-khoan/{idTaiKhoan}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Long> layNhanVienTheoIDTaiKhoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
+		try {
+			NhanVien _nhanVien = nhanVienService.layNhanVienTheoIDAcc(idTaiKhoan);
+			if (_nhanVien == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(_nhanVien.getTramTrungChuyen().getId(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+
+	}
+
 	// Tạo mới nhân viên
 	@PostMapping(value = "/nhan-vien", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@PreAuthorize("hasRole('ADMIN')")
@@ -85,7 +101,9 @@ public class NhanVienController {
 			@PathVariable("idNhanVien") Long idNhanVien) {
 		try {
 			Gson gson = new Gson();
+
 			NhanVienDTO _nhanVienDTO = gson.fromJson(nhanVien, NhanVienDTO.class);
+
 			return new ResponseEntity<>(nhanVienService.capNhatNhanVien(_nhanVienDTO, avatarFile, idNhanVien),
 					HttpStatus.OK);
 		} catch (Exception e) {

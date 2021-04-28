@@ -2,6 +2,11 @@ package com.logistics.models.dto;
 
 import java.util.Date;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
+import com.logistics.models.enu.ETrangThaiTram;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,17 +18,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class KhachHangDTO {
+public class TramTrungChuyenDTO {
 	private Long id;
-	private String tenKhachHang;
-	private String tenCuaHang;
-	private String sdt;
+	private String maTram;
+	private String tenTram;
 	private String diaChi;
-	private String email;
-	private String cmnd;
-	private String soTaiKhoan;
-	private int soDonHang = 0;
-	private String loaiKhachHang;
+	private ETrangThaiTram trangThai;
+	private String moTa;
 
-	private Date thoiGianCapNhat;
+	private Date thoiGianKhoiTao;
 }

@@ -15,6 +15,9 @@ public interface NhanVienService {
 	// Lấy nhân viên theo ID
 	public NhanVien layNhanVienTheoID(Long idNhanVien);
 
+	// Lấy nhân viên theo ID Acc
+	public NhanVien layNhanVienTheoIDAcc(Long idTaiKhoan);
+
 	// Tạo mới nhân viên
 	public NhanVien taoMoiNhanVien(NhanVienDTO nhanVienTaoMoi, MultipartFile avatarFile);
 

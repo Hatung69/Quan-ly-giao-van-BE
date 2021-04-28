@@ -3,7 +3,6 @@ package com.logistics.services.impl;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.logistics.models.EQuyenHan;
 import com.logistics.models.NhanVien;
 import com.logistics.models.QuyenHan;
 import com.logistics.models.dto.NhanVienDTO;
+import com.logistics.models.enu.EQuyenHan;
 import com.logistics.repositories.NhanVienRepository;
 import com.logistics.repositories.QuyenHanRepository;
 import com.logistics.services.NhanVienService;
@@ -41,9 +40,10 @@ public class NhanVienServiceImpl implements NhanVienService {
 		List<NhanVienDTO> _dsNhanVien = new ArrayList<NhanVienDTO>();
 		dsNhanVien.forEach(nv -> {
 			// Ko lấy ADMIN
-			if (!(nv.getTaiKhoan().getQuyenHan().size()>=2)) {
-				_dsNhanVien.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getGioiTinh(), nv.getNgaySinh(),
-						nv.getDiaChi(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), nv.getTaiKhoan()));
+			if (!(nv.getTaiKhoan().getQuyenHan().size() >= 2)) {
+				_dsNhanVien
+						.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getDiaChi(), nv.getGioiTinh(),
+								nv.getNgaySinh(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), nv.getTaiKhoan()));
 			}
 		});
 		return _dsNhanVien;
@@ -55,6 +55,10 @@ public class NhanVienServiceImpl implements NhanVienService {
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Nhân viên!"));
 		_nhanVien.setAvatar(decompressBytes(_nhanVien.getAvatar()));
 		return _nhanVien;
+	}
+
+	public NhanVien layNhanVienTheoIDAcc(Long idTaiKhoan) {
+		return nhanVienRepository.findNhanVienByTaiKhoanId(idTaiKhoan);
 	}
 
 	@Override
@@ -72,9 +76,9 @@ public class NhanVienServiceImpl implements NhanVienService {
 		NhanVien _nhanVien = null;
 		try {
 			_nhanVien = new NhanVien(null, nhanVienTaoMoi.getHoTen(), nhanVienTaoMoi.getSdt(),
-					nhanVienTaoMoi.getGioiTinh(), nhanVienTaoMoi.getNgaySinh(), nhanVienTaoMoi.getDiaChi(),
-					nhanVienTaoMoi.getTrangThai(), compressBytes(avatarFile.getBytes()), new Date(), null, null,
-					nhanVienTaoMoi.getTaiKhoan());
+					nhanVienTaoMoi.getDiaChi(), nhanVienTaoMoi.getGioiTinh(), nhanVienTaoMoi.getNgaySinh(),
+					nhanVienTaoMoi.getTrangThai(), compressBytes(avatarFile.getBytes()), nhanVienTaoMoi.getTaiKhoan(),
+					null, null, null, null);
 			return nhanVienRepository.save(_nhanVien);
 		} catch (IOException e) {
 			e.printStackTrace();

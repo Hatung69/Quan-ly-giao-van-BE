@@ -1,10 +1,13 @@
 package com.logistics.models;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -12,16 +15,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.logistics.models.enu.ETrangThaiNhanVien;
+import com.logistics.models.enu.ETrangThaiShipper;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,9 +36,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
-@Table(name = "nhan_vien")
-public class NhanVien {
+@Table(name = "shipper")
+public class Shipper {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -46,32 +50,30 @@ public class NhanVien {
 	private String sdt;
 	@Column(length = 200)
 	private String diaChi;
-	@Column(length = 10)
-	private String gioiTinh;
-	@Temporal(TemporalType.DATE)
-	private Date ngaySinh;
+	@Column(length = 100)
+	private String email;
+	@Column(length = 15)
+	private String cmnd;
+	private double tienDuNo;//
 	@Enumerated(EnumType.STRING)
 	@Column(length = 50)
-	private ETrangThaiNhanVien trangThai;
-	@Column(name = "avatar", columnDefinition = "LONGBLOB")
-	private byte[] avatar;//
+	private ETrangThaiShipper trangThai;
 
-	@OneToOne(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
-	@JoinColumn(name = "tai_khoan_id", nullable = false)
-	private TaiKhoan taiKhoan;
-
-	// Trạm chung chuyển
-	@ManyToOne
-	@JoinColumn(name = "tram_trung_chuyen_id", nullable = true)
-	@JsonIgnore // Ko ingnore là lúc get nó bị lồng lồng nhau
-	private TramTrungChuyen tramTrungChuyen;
+	@OneToMany(mappedBy = "khachHang", cascade = { CascadeType.DETACH })
+	private Set<DonHang> dsDonHang = new HashSet<>();
 
 	// ----- Lưu giữ chung -----
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lanCuoiDangNhap;
 	@CreationTimestamp
 	private Date thoiGianKhoiTao;
 	@UpdateTimestamp
-	private Date thoiGianChinhSua;
+	private Date thoiGianCapNhat;
+	@ManyToOne
+	@JoinColumn(name = "tao_boi")
+	@CreatedBy
+	private NhanVien taoBoi;
+	@ManyToOne
+	@JoinColumn(name = "cap_nhat_boi")
+	@LastModifiedBy
+	private NhanVien capNhatBoi;
 
 }
