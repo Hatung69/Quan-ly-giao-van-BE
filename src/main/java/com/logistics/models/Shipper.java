@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,12 +55,11 @@ public class Shipper {
 	private String email;
 	@Column(length = 15)
 	private String cmnd;
-	private double tienDuNo;//
 	@Enumerated(EnumType.STRING)
 	@Column(length = 50)
 	private ETrangThaiShipper trangThai;
 
-	@OneToMany(mappedBy = "khachHang", cascade = { CascadeType.DETACH })
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "shipper", cascade = { CascadeType.DETACH })
 	private Set<DonHang> dsDonHang = new HashSet<>();
 
 	// ----- Lưu giữ chung -----

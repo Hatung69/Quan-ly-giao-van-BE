@@ -24,8 +24,20 @@ public class KhachHangServiceImpl implements KhachHangService {
 		List<KhachHangDTO> _dsKhachHang = new ArrayList<KhachHangDTO>();
 		dsKhachHang.forEach(kh -> {
 			_dsKhachHang.add(new KhachHangDTO(kh.getId(), kh.getTenKhachHang(), kh.getTenCuaHang(), kh.getSdt(),
-					kh.getDiaChi(), kh.getEmail(), kh.getCmnd(), kh.getSoTaiKhoan(),kh.getDsDonHang().size(), kh.getLoaiKhachHang(),
-					kh.getThoiGianCapNhat()));
+					kh.getDiaChi(), kh.getEmail(), kh.getCmnd(), kh.getSoTaiKhoan(), kh.getDsDonHang().size(),
+					kh.getLoaiKhachHang(), kh.getThoiGianCapNhat()));
+		});
+		return _dsKhachHang;
+	}
+
+	@Override
+	public List<KhachHangDTO> timKiemKH(String keySearch) {
+		List<KhachHang> dsKhachHang = khachHangRepository.timeKiemKhachHang(keySearch);
+		List<KhachHangDTO> _dsKhachHang = new ArrayList<KhachHangDTO>();
+		dsKhachHang.forEach(kh -> {
+			_dsKhachHang.add(new KhachHangDTO(kh.getId(), kh.getTenKhachHang(), kh.getTenCuaHang(), kh.getSdt(),
+					kh.getDiaChi(), kh.getEmail(), kh.getCmnd(), kh.getSoTaiKhoan(), kh.getDsDonHang().size(),
+					kh.getLoaiKhachHang(), kh.getThoiGianCapNhat()));
 		});
 		return _dsKhachHang;
 	}
@@ -41,7 +53,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 	public KhachHang taoMoiKhachHang(KhachHangDTO khachHangTaoMoi) {
 		KhachHang _khachHang = new KhachHang(null, khachHangTaoMoi.getTenKhachHang(), khachHangTaoMoi.getTenCuaHang(),
 				khachHangTaoMoi.getSdt(), khachHangTaoMoi.getDiaChi(), khachHangTaoMoi.getEmail(),
-				khachHangTaoMoi.getCmnd(), khachHangTaoMoi.getSoTaiKhoan(), khachHangTaoMoi.getLoaiKhachHang(), 0, null,
+				khachHangTaoMoi.getCmnd(), khachHangTaoMoi.getSoTaiKhoan(), khachHangTaoMoi.getLoaiKhachHang(), null,
 				null, null, null, null);
 		return khachHangRepository.save(_khachHang);
 	}

@@ -7,7 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.logistics.models.KhachHang;
 import com.logistics.models.Shipper;
+import com.logistics.models.dto.KhachHangDTO;
 import com.logistics.models.dto.ShipperDTO;
 import com.logistics.repositories.ShipperRepository;
 import com.logistics.services.ShipperService;
@@ -24,7 +26,18 @@ public class ShipperServiceImpl implements ShipperService {
 		List<ShipperDTO> _dsShipper = new ArrayList<ShipperDTO>();
 		dsShipper.forEach(sp -> {
 			_dsShipper.add(new ShipperDTO(sp.getId(), sp.getHoTen(), sp.getSdt(), sp.getDiaChi(), sp.getEmail(),
-					sp.getCmnd(), 0, sp.getTrangThai(), sp.getThoiGianCapNhat()));
+					sp.getCmnd(), 0, sp.getTrangThai(),sp.getDsDonHang().size(), sp.getThoiGianCapNhat()));
+		});
+		return _dsShipper;
+	}
+
+	@Override
+	public List<ShipperDTO> timKiemShipper(String keySearch) {
+		List<Shipper> dsShipper = shipperRepository.timeKiemShipper(keySearch);
+		List<ShipperDTO> _dsShipper = new ArrayList<ShipperDTO>();
+		dsShipper.forEach(sp -> {
+			_dsShipper.add(new ShipperDTO(sp.getId(), sp.getHoTen(), sp.getSdt(), sp.getDiaChi(), sp.getEmail(),
+					sp.getCmnd(), 0, sp.getTrangThai(),sp.getDsDonHang().size(), sp.getThoiGianCapNhat()));
 		});
 		return _dsShipper;
 	}
@@ -38,8 +51,8 @@ public class ShipperServiceImpl implements ShipperService {
 
 	@Override
 	public Shipper taoMoiShipper(ShipperDTO shipperTaoMoi) {
-		Shipper _shipper = new Shipper(null, shipperTaoMoi.getHoTen(), 
-				shipperTaoMoi.getSdt(), shipperTaoMoi.getDiaChi(),shipperTaoMoi.getEmail(),shipperTaoMoi.getCmnd(),  0,
+		Shipper _shipper = new Shipper(null, shipperTaoMoi.getHoTen(), shipperTaoMoi.getSdt(),
+				shipperTaoMoi.getDiaChi(), shipperTaoMoi.getEmail(), shipperTaoMoi.getCmnd(),
 				shipperTaoMoi.getTrangThai(), null, null, null, null, null);
 		return shipperRepository.save(_shipper);
 	}

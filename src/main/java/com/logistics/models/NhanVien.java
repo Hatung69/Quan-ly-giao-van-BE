@@ -61,7 +61,7 @@ public class NhanVien {
 	private TaiKhoan taiKhoan;
 
 	// Trạm chung chuyển
-	@ManyToOne
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.DETACH })
 	@JoinColumn(name = "tram_trung_chuyen_id", nullable = true)
 	@JsonIgnore // Ko ingnore là lúc get nó bị lồng lồng nhau
 	private TramTrungChuyen tramTrungChuyen;

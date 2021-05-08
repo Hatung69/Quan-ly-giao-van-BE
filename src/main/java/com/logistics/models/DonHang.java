@@ -73,7 +73,7 @@ public class DonHang {
 	private Set<HangHoa> dsHangHoa = new HashSet<HangHoa>();
 
 	// ----- Thông tin shipper vận hàng -----
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.DETACH })
+	@ManyToOne(cascade = { CascadeType.PERSIST,CascadeType.DETACH })
 	@JoinColumn(name = "shipper_id", nullable = true)
 	@JsonIgnore // Ko ingnore là lúc get nó bị lồng lồng nhau
 	private Shipper shipper;

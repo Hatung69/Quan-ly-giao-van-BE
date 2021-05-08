@@ -57,9 +57,8 @@ public class KhachHang {
 	private String soTaiKhoan;
 	@Column(length = 50)
 	private String loaiKhachHang;
-	private double tienDoiSoat;
 
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "khachHang", cascade = { CascadeType.REMOVE })
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "khachHang", cascade = { CascadeType.DETACH })
 	private Set<DonHang> dsDonHang = new HashSet<>();
 
 	// ----- Lưu giữ chung -----

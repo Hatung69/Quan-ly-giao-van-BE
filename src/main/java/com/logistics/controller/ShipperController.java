@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logistics.models.Shipper;
+import com.logistics.models.dto.KhachHangDTO;
 import com.logistics.models.dto.ShipperDTO;
 import com.logistics.services.ShipperService;
 
@@ -43,6 +45,21 @@ public class ShipperController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	// Tìm shipper
+			@GetMapping("/shipper/tim-kiem")
+			@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+			public ResponseEntity<List<ShipperDTO>> timKiemShipper(@RequestParam("keySearch") String keySearch) {
+				try {
+					List<ShipperDTO> _dsShipper = shipperService.timKiemShipper(keySearch);
+					if (_dsShipper.isEmpty()) {
+						return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+					}
+					return new ResponseEntity<>(_dsShipper, HttpStatus.OK);
+				} catch (Exception e) {
+					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
 
 	// Lấy shipper theo ID
 	@GetMapping("/shipper/{idShipper}")

@@ -24,6 +24,7 @@ public class ShipperDTO {
 	private String cmnd;
 	private int soDonHangDaNHan;
 	private ETrangThaiShipper trangThai;
-	
+	private int soDonHang = 0;
+
 	private Date thoiGianCapNhat;
 }

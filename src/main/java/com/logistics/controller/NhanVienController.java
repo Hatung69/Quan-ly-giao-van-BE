@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.logistics.models.NhanVien;
+import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.NhanVienDTO;
 import com.logistics.services.NhanVienService;
 
@@ -65,18 +66,32 @@ public class NhanVienController {
 
 	// Lấy ID Trạm trung chuyển từ nhân viên  theo Id Tài khoản
 	@GetMapping("/nhan-vien/tai-khoan/{idTaiKhoan}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Long> layNhanVienTheoIDTaiKhoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
+	@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+	public ResponseEntity<TramTrungChuyen> layIDTramTTCTheoIDTaiKHoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
 		try {
 			NhanVien _nhanVien = nhanVienService.layNhanVienTheoIDAcc(idTaiKhoan);
 			if (_nhanVien == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<>(_nhanVien.getTramTrungChuyen().getId(), HttpStatus.OK);
+			return new ResponseEntity<>(_nhanVien.getTramTrungChuyen(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
+	}
+	// Lấy nhân viên  theo Id Tài khoản
+	@GetMapping("/nhan-vien/tai-khoan-id/{idTaiKhoan}")
+	@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+	public ResponseEntity<NhanVien> layNhanVienIDTaiKHoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
+		try {
+			NhanVien _nhanVien = nhanVienService.layNhanVienTheoIDAcc(idTaiKhoan);
+			if (_nhanVien == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(_nhanVien, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	// Tạo mới nhân viên

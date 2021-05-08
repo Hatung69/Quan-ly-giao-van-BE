@@ -1,6 +1,9 @@
 package com.logistics.services;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -15,16 +18,24 @@ public interface DonHangService {
 	// Lấy đơn hàng theo ID
 	public DonHangDTO layDonHangTheoID(Long idDonHang);
 
+	List<DonHangDTO> timeKiemNhanh(String keySearch);
+
+	List<DonHangDTO> thongKeTheoThoiGian(Date batDau, Date ketThuc);
+
 	// Tạo mới đơn hàng
 	public DonHang taoMoiDonHang(DonHangDTO donHangTaoMoi, MultipartFile fileAnhDinhKem);
 
 	// Cập nhật đơn hàng
 	public DonHang capNhatDonHang(DonHangDTO donHangCapNhat, MultipartFile fileAnhDinhKem, Long idDonHang);
-	
+
 	DonHangDTO layDonHangTheoMaDonHang(String maDonHang);
+
+	public Map<String, Integer> tongThongKe();
 
 // ------------------ Hàm dựng sẵn của JPA -------------------------
 	void deleteAll();
+
+	void deleteAllById(List<Long> ids);
 
 	void delete(DonHang entity);
 
@@ -36,9 +47,10 @@ public interface DonHangService {
 
 	Optional<DonHang> findById(Long id);
 
+	public List<DonHang> findAllById(Iterable<Long> ids);
+
 	List<DonHang> findAll();
 
 	DonHang save(DonHang entity);
 
-	
 }

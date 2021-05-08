@@ -18,10 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.logistics.models.NhanVien;
 import com.logistics.models.QuyenHan;
+import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.NhanVienDTO;
 import com.logistics.models.enu.EQuyenHan;
 import com.logistics.repositories.NhanVienRepository;
 import com.logistics.repositories.QuyenHanRepository;
+import com.logistics.repositories.TramTrungChuyenRepository;
 import com.logistics.services.NhanVienService;
 
 @Service
@@ -29,6 +31,8 @@ public class NhanVienServiceImpl implements NhanVienService {
 
 	@Autowired
 	private NhanVienRepository nhanVienRepository;
+	@Autowired
+	private TramTrungChuyenRepository tramTrungChuyenRepository;
 	@Autowired
 	private QuyenHanRepository quyenHanRepository;
 	@Autowired
@@ -43,7 +47,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 			if (!(nv.getTaiKhoan().getQuyenHan().size() >= 2)) {
 				_dsNhanVien
 						.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getDiaChi(), nv.getGioiTinh(),
-								nv.getNgaySinh(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), nv.getTaiKhoan()));
+								nv.getNgaySinh(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), null, nv.getTaiKhoan()));
 			}
 		});
 		return _dsNhanVien;
@@ -58,7 +62,9 @@ public class NhanVienServiceImpl implements NhanVienService {
 	}
 
 	public NhanVien layNhanVienTheoIDAcc(Long idTaiKhoan) {
-		return nhanVienRepository.findNhanVienByTaiKhoanId(idTaiKhoan);
+		NhanVien _nhanVien = nhanVienRepository.findNhanVienByTaiKhoanId(idTaiKhoan);
+		_nhanVien.setAvatar(decompressBytes(_nhanVien.getAvatar()));
+		return _nhanVien;
 	}
 
 	@Override
@@ -73,12 +79,15 @@ public class NhanVienServiceImpl implements NhanVienService {
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
 		dsQuyen.add(quyenHan);
 		nhanVienTaoMoi.getTaiKhoan().setQuyenHan(dsQuyen);
+		TramTrungChuyen _tram = tramTrungChuyenRepository.findById(nhanVienTaoMoi.getIdTram())
+				.orElseThrow(() -> new RuntimeException("Ko tìm thấy trạm"));
+
 		NhanVien _nhanVien = null;
 		try {
 			_nhanVien = new NhanVien(null, nhanVienTaoMoi.getHoTen(), nhanVienTaoMoi.getSdt(),
 					nhanVienTaoMoi.getDiaChi(), nhanVienTaoMoi.getGioiTinh(), nhanVienTaoMoi.getNgaySinh(),
 					nhanVienTaoMoi.getTrangThai(), compressBytes(avatarFile.getBytes()), nhanVienTaoMoi.getTaiKhoan(),
-					null, null, null, null);
+					_tram, null, null, null);
 			return nhanVienRepository.save(_nhanVien);
 		} catch (IOException e) {
 			e.printStackTrace();

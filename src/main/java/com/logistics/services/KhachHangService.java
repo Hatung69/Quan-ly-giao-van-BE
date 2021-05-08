@@ -9,6 +9,8 @@ import com.logistics.models.dto.KhachHangDTO;
 public interface KhachHangService {
 	// Lấy danh sách khách hàng
 	public List<KhachHangDTO> layDSKhachHang();
+	
+	List<KhachHangDTO> timKiemKH(String keySearch);
 
 	// Lấy khách hàng theo ID
 	public KhachHang layKhachHangTheoID(Long idKhachHang);
@@ -35,4 +37,5 @@ public interface KhachHangService {
 	List<KhachHang> findAll();
 
 	KhachHang save(KhachHang entity);
+
 }

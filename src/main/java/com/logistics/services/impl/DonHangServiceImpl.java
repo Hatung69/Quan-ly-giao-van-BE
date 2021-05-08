@@ -2,9 +2,13 @@ package com.logistics.services.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.zip.DataFormatException;
@@ -19,6 +23,7 @@ import com.logistics.models.DonHang;
 import com.logistics.models.DonHangTramTrungChuyen;
 import com.logistics.models.HangHoa;
 import com.logistics.models.KhachHang;
+import com.logistics.models.TongThongKe;
 import com.logistics.models.dto.DonHangDTO;
 import com.logistics.models.dto.DonHangTramDTO;
 import com.logistics.models.enu.ETrangThaiDonHang;
@@ -36,15 +41,31 @@ public class DonHangServiceImpl implements DonHangService {
 	@Autowired
 	private KhachHangRepository khachHangRepository;
 
+	public Map<String, Integer> tongThongKe() {
+		List<Integer[]> _obj = donHangRepository.tongThongKe();
+		Map<String, Integer> _listTong = new HashMap<>();
+		_listTong.put("TongDH", _obj.get(0)[0]);
+		_listTong.put("TongKH", _obj.get(0)[1]);
+		_listTong.put("TongShipper", _obj.get(0)[2]);
+		_listTong.put("TongNhanVien", _obj.get(0)[3]);
+		return _listTong;
+	}
+
 	@Override
 	public List<DonHangDTO> layDSDonHang() {
 		List<DonHang> dsDonHang = donHangRepository.findAllByOrderByThoiGianKhoiTaoDesc();
 		List<DonHangDTO> _dsDonHang = new ArrayList<DonHangDTO>();
 		dsDonHang.forEach(dh -> {
+			Set<DonHangTramDTO> dsDonHangTramDTO = new HashSet<>();
+			dh.getDsDonHangTram().forEach(e -> {
+				dsDonHangTramDTO.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(),
+						e.getThoiGianKhoiTao(), e.getTaoBoi()));
+			});
 			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
 					dh.getDiaChi(), dh.getKhachHang(), dh.getDsHangHoa(), dh.getShipper(), dh.getNguoiTraPhiShip(),
 					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
-					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), null, dh.getThoiGianKhoiTao(), dh.getTaoBoi()));
+					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), dsDonHangTramDTO, dh.getThoiGianKhoiTao(),
+					dh.getTaoBoi()));
 		});
 		return _dsDonHang;
 	}
@@ -53,11 +74,6 @@ public class DonHangServiceImpl implements DonHangService {
 	public DonHangDTO layDonHangTheoID(Long idDonHang) {
 		DonHang _donHang = donHangRepository.findById(idDonHang)
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Đơn hàng này!"));
-		_donHang.getDsDonHangTram().forEach(e -> {
-			System.out.println(e.getThoiGianKhoiTao());
-			System.out.println(e.getTaoBoi().getHoTen());
-			System.out.println(e.getTramTrungChuyen().getTenTram());
-		});
 		Set<DonHangTramDTO> _dhttc = new HashSet<DonHangTramDTO>();
 		_donHang.getDsDonHangTram().forEach(e -> {
 			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(), e.getThoiGianKhoiTao(),
@@ -72,9 +88,21 @@ public class DonHangServiceImpl implements DonHangService {
 		return _donHangDTO;
 	}
 
+	public List<DonHangDTO> thongKeTheoThoiGian(Date batDau, Date ketThuc) {
+		List<DonHang> dsDonHang = donHangRepository.findByThoiGianKhoiTaoBetween(batDau, ketThuc);
+		List<DonHangDTO> _dsDonHang = new ArrayList<DonHangDTO>();
+		dsDonHang.forEach(dh -> {
+			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
+					dh.getDiaChi(), null, dh.getDsHangHoa(), null, dh.getNguoiTraPhiShip(),
+					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
+					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), null, dh.getThoiGianKhoiTao(),
+					null));
+		});
+		return _dsDonHang;
+	}
+
 	@Override
 	public DonHangDTO layDonHangTheoMaDonHang(String maDonHang) {
-		System.out.println("passs");
 		DonHang _donHang = donHangRepository.findByMaDonHang(maDonHang)
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Đơn hàng này!"));
 		Set<DonHangTramDTO> _dhttc = new HashSet<DonHangTramDTO>();
@@ -89,6 +117,25 @@ public class DonHangServiceImpl implements DonHangService {
 				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(), _donHang.getTrangThaiDoiSoat(), _dhttc,
 				_donHang.getThoiGianKhoiTao(), _donHang.getTaoBoi());
 		return _donHangDTO;
+	}
+
+	@Override
+	public List<DonHangDTO> timeKiemNhanh(String keySearch) {
+		List<DonHang> dsDonHang = donHangRepository.timeKiemNhanh(keySearch);
+		List<DonHangDTO> _dsDonHang = new ArrayList<DonHangDTO>();
+		dsDonHang.forEach(dh -> {
+			Set<DonHangTramDTO> dsDonHangTramDTO = new HashSet<>();
+			dh.getDsDonHangTram().forEach(e -> {
+				dsDonHangTramDTO.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(),
+						e.getThoiGianKhoiTao(), e.getTaoBoi()));
+			});
+			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
+					dh.getDiaChi(), dh.getKhachHang(), dh.getDsHangHoa(), dh.getShipper(), dh.getNguoiTraPhiShip(),
+					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
+					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), dsDonHangTramDTO, dh.getThoiGianKhoiTao(),
+					dh.getTaoBoi()));
+		});
+		return _dsDonHang;
 	}
 
 	@Override
@@ -124,7 +171,7 @@ public class DonHangServiceImpl implements DonHangService {
 			_donHang.setGhiChu(donHangTaoMoi.getGhiChu());
 			_donHang.setThoiGianDuKien(donHangTaoMoi.getThoiGianDuKien());
 			_donHang.setAnhDinhKem(compressBytes(fileAnhDinhKem.getBytes()));
-			_donHang.setTrangThai(ETrangThaiDonHang.Cho_lay_hang);
+			_donHang.setTrangThai(ETrangThaiDonHang.Cho_xac_nhan);
 			_donHang.setTrangThaiDoiSoat("Chưa đối soát");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,6 +221,10 @@ public class DonHangServiceImpl implements DonHangService {
 		return donHangRepository.findAll();
 	}
 
+	public List<DonHang> findAllById(Iterable<Long> ids) {
+		return donHangRepository.findAllById(ids);
+	}
+
 	@Override
 	public Optional<DonHang> findById(Long id) {
 		return donHangRepository.findById(id);
@@ -202,6 +253,11 @@ public class DonHangServiceImpl implements DonHangService {
 	@Override
 	public void deleteAll() {
 		donHangRepository.deleteAll();
+	}
+
+	@Override
+	public void deleteAllById(List<Long> ids) {
+		donHangRepository.deleteAllById(ids);
 	}
 
 	/*

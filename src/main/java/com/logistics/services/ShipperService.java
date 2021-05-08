@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import com.logistics.models.Shipper;
+import com.logistics.models.dto.KhachHangDTO;
 import com.logistics.models.dto.ShipperDTO;
 
 public interface ShipperService {
 	// Lấy danh sách shipper
 	public List<ShipperDTO> layDSShipper();
+	
+	List<ShipperDTO> timKiemShipper(String keySearch);
 
 	// Lấy shipper theo ID
 	public Shipper layShipperTheoID(Long idShipper);

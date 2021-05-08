@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logistics.models.KhachHang;
@@ -43,6 +44,22 @@ public class KhachHangController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	// Tìm khách hàng theo Keyword
+		@GetMapping("/khach-hang/tim-kiem")
+		@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
+		public ResponseEntity<List<KhachHangDTO>> timKiemKhachHang(@RequestParam("keySearch") String keySearch) {
+			try {
+				System.out.println("passs");
+				List<KhachHangDTO> _dsKhachHang = khachHangService.timKiemKH(keySearch);
+				if (_dsKhachHang.isEmpty()) {
+					return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+				}
+				return new ResponseEntity<>(_dsKhachHang, HttpStatus.OK);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
 
 	// Lấy khách hàng theo ID
 	@GetMapping("/khach-hang/{idKhachHang}")
