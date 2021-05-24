@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,17 +55,17 @@ public class NhanVien {
 	@Column(length = 50)
 	private ETrangThaiNhanVien trangThai;
 	@Column(name = "avatar", columnDefinition = "LONGBLOB")
-	private byte[] avatar;//
-
-	@OneToOne(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
-	@JoinColumn(name = "tai_khoan_id", nullable = false)
-	private TaiKhoan taiKhoan;
+	private byte[] avatar;
 
 	// Trạm chung chuyển
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.DETACH })
+	@ManyToOne(cascade = {CascadeType.DETACH }, fetch = FetchType.LAZY)
 	@JoinColumn(name = "tram_trung_chuyen_id", nullable = true)
 	@JsonIgnore // Ko ingnore là lúc get nó bị lồng lồng nhau
 	private TramTrungChuyen tramTrungChuyen;
+	
+	@OneToOne(cascade = { CascadeType.REMOVE, CascadeType.PERSIST })
+	@JoinColumn(name = "tai_khoan_id", nullable = false)
+	private TaiKhoan taiKhoan;
 
 	// ----- Lưu giữ chung -----
 	@Temporal(TemporalType.TIMESTAMP)

@@ -43,12 +43,15 @@ public class NhanVienServiceImpl implements NhanVienService {
 		List<NhanVien> dsNhanVien = nhanVienRepository.findAll();
 		List<NhanVienDTO> _dsNhanVien = new ArrayList<NhanVienDTO>();
 		dsNhanVien.forEach(nv -> {
-			// Ko lấy ADMIN
-			if (!(nv.getTaiKhoan().getQuyenHan().size() >= 2)) {
-				_dsNhanVien
-						.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getDiaChi(), nv.getGioiTinh(),
-								nv.getNgaySinh(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), null, nv.getTaiKhoan()));
-			}
+			_dsNhanVien.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getDiaChi(), nv.getGioiTinh(),
+					nv.getNgaySinh(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), nv.getTramTrungChuyen().getTenTram(),
+					null, nv.getTaiKhoan()));
+//			// Ko lấy ADMIN
+//			if (!(nv.getTaiKhoan().getQuyenHan().size() >= 2)) {
+//				_dsNhanVien
+//				.add(new NhanVienDTO(nv.getId(), nv.getHoTen(), nv.getSdt(), nv.getDiaChi(), nv.getGioiTinh(),
+//						nv.getNgaySinh(), nv.getTrangThai(), nv.getLanCuoiDangNhap(), nv.getTramTrungChuyen().getMaTram(), nv.getTaiKhoan()));
+//			}
 		});
 		return _dsNhanVien;
 	}
@@ -73,21 +76,26 @@ public class NhanVienServiceImpl implements NhanVienService {
 			+Quyền hạn*/
 	public NhanVien taoMoiNhanVien(NhanVienDTO nhanVienTaoMoi, MultipartFile avatarFile) {
 		nhanVienTaoMoi.getTaiKhoan().setPassword(encoder.encode(nhanVienTaoMoi.getTaiKhoan().getPassword()));
-
+		
 		Set<QuyenHan> dsQuyen = new HashSet<>();
-		QuyenHan quyenHan = quyenHanRepository.findByTenQuyen(EQuyenHan.ROLE_EMPLOYEE)
+		QuyenHan nhanVien = quyenHanRepository.findByTenQuyen(EQuyenHan.ROLE_EMPLOYEE)
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
-		dsQuyen.add(quyenHan);
+		dsQuyen.add(nhanVien);
+		if (nhanVienTaoMoi.getQuyenHan().equals("ROLE_ADMIN")) {
+			QuyenHan admin = quyenHanRepository.findByTenQuyen(EQuyenHan.ROLE_ADMIN)
+					.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
+			dsQuyen.add(admin);
+		}
 		nhanVienTaoMoi.getTaiKhoan().setQuyenHan(dsQuyen);
-		TramTrungChuyen _tram = tramTrungChuyenRepository.findById(nhanVienTaoMoi.getIdTram())
+		TramTrungChuyen _tram = tramTrungChuyenRepository.findByMaTram(nhanVienTaoMoi.getMaTram())
 				.orElseThrow(() -> new RuntimeException("Ko tìm thấy trạm"));
 
 		NhanVien _nhanVien = null;
 		try {
 			_nhanVien = new NhanVien(null, nhanVienTaoMoi.getHoTen(), nhanVienTaoMoi.getSdt(),
 					nhanVienTaoMoi.getDiaChi(), nhanVienTaoMoi.getGioiTinh(), nhanVienTaoMoi.getNgaySinh(),
-					nhanVienTaoMoi.getTrangThai(), compressBytes(avatarFile.getBytes()), nhanVienTaoMoi.getTaiKhoan(),
-					_tram, null, null, null);
+					nhanVienTaoMoi.getTrangThai(), compressBytes(avatarFile.getBytes()),
+					_tram,  nhanVienTaoMoi.getTaiKhoan(),null, null, null);
 			return nhanVienRepository.save(_nhanVien);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -100,6 +108,17 @@ public class NhanVienServiceImpl implements NhanVienService {
 	public NhanVien capNhatNhanVien(NhanVienDTO nhanVienTaoMoi, MultipartFile avatarFile, Long idNhanVien) {
 		NhanVien _nhanVien = nhanVienRepository.findById(idNhanVien)
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Nhan viên!"));
+		Set<QuyenHan> dsQuyen = new HashSet<>();
+		QuyenHan nhanVien = quyenHanRepository.findByTenQuyen(EQuyenHan.ROLE_EMPLOYEE)
+				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
+		dsQuyen.add(nhanVien);
+		if (nhanVienTaoMoi.getQuyenHan().equals("ROLE_ADMIN")) {
+			QuyenHan admin = quyenHanRepository.findByTenQuyen(EQuyenHan.ROLE_ADMIN)
+					.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Quyền!"));
+			dsQuyen.add(admin);
+		}
+		_nhanVien.getTaiKhoan().getQuyenHan().removeAll(dsQuyen);
+		_nhanVien.getTaiKhoan().setQuyenHan(dsQuyen);
 		try {
 			if (avatarFile == null) {
 				System.out.println("File ko cần update");

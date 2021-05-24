@@ -2,7 +2,6 @@ package com.logistics.services.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,12 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.logistics.models.DonHang;
-import com.logistics.models.DonHangTramTrungChuyen;
-import com.logistics.models.HangHoa;
 import com.logistics.models.KhachHang;
-import com.logistics.models.TongThongKe;
 import com.logistics.models.dto.DonHangDTO;
 import com.logistics.models.dto.DonHangTramDTO;
+import com.logistics.models.dto.TramTrungChuyenDTO;
 import com.logistics.models.enu.ETrangThaiDonHang;
 import com.logistics.repositories.DonHangRepository;
 import com.logistics.repositories.KhachHangRepository;
@@ -58,14 +55,13 @@ public class DonHangServiceImpl implements DonHangService {
 		dsDonHang.forEach(dh -> {
 			Set<DonHangTramDTO> dsDonHangTramDTO = new HashSet<>();
 			dh.getDsDonHangTram().forEach(e -> {
-				dsDonHangTramDTO.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(),
-						e.getThoiGianKhoiTao(), e.getTaoBoi()));
+				dsDonHangTramDTO.add(
+						new DonHangTramDTO(e.getId(), e.getDonHang(), null, e.getThoiGianKhoiTao(), e.getTaoBoi()));
 			});
 			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
 					dh.getDiaChi(), dh.getKhachHang(), dh.getDsHangHoa(), dh.getShipper(), dh.getNguoiTraPhiShip(),
 					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
-					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), dsDonHangTramDTO, dh.getThoiGianKhoiTao(),
-					dh.getTaoBoi()));
+					dh.getTrangThai(), dsDonHangTramDTO, dh.getThoiGianKhoiTao(), dh.getTaoBoi()));
 		});
 		return _dsDonHang;
 	}
@@ -75,16 +71,24 @@ public class DonHangServiceImpl implements DonHangService {
 		DonHang _donHang = donHangRepository.findById(idDonHang)
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Đơn hàng này!"));
 		Set<DonHangTramDTO> _dhttc = new HashSet<DonHangTramDTO>();
+
 		_donHang.getDsDonHangTram().forEach(e -> {
-			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(), e.getThoiGianKhoiTao(),
-					e.getTaoBoi()));
+			TramTrungChuyenDTO _ttcDTO = new TramTrungChuyenDTO(e.getTramTrungChuyen().getId(),
+					e.getTramTrungChuyen().getMaTram(), e.getTramTrungChuyen().getTenTram(),
+					e.getTramTrungChuyen().getDiaChi(), e.getTramTrungChuyen().getSdt(),
+					e.getTramTrungChuyen().getTrangThai(), e.getTramTrungChuyen().getMoTa(),
+					e.getTramTrungChuyen().getThoiGianKhoiTao());
+			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), _ttcDTO, e.getThoiGianKhoiTao(), e.getTaoBoi()));
+		});
+		_dhttc.forEach(e -> {
+			System.out.println(e.toString());
 		});
 		DonHangDTO _donHangDTO = new DonHangDTO(_donHang.getId(), _donHang.getMaDonHang(), _donHang.getTenNguoiNhan(),
 				_donHang.getSdtNguoiNhan(), _donHang.getDiaChi(), _donHang.getKhachHang(), _donHang.getDsHangHoa(),
 				_donHang.getShipper(), _donHang.getNguoiTraPhiShip(), _donHang.getPhiShip(),
 				_donHang.getTongTienThuHo(), _donHang.getGhiChu(), decompressBytes(_donHang.getAnhDinhKem()),
-				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(), _donHang.getTrangThaiDoiSoat(), _dhttc,
-				_donHang.getThoiGianKhoiTao(), _donHang.getTaoBoi());
+				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(), _dhttc, _donHang.getThoiGianKhoiTao(),
+				_donHang.getTaoBoi());
 		return _donHangDTO;
 	}
 
@@ -93,10 +97,9 @@ public class DonHangServiceImpl implements DonHangService {
 		List<DonHangDTO> _dsDonHang = new ArrayList<DonHangDTO>();
 		dsDonHang.forEach(dh -> {
 			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
-					dh.getDiaChi(), null, dh.getDsHangHoa(), null, dh.getNguoiTraPhiShip(),
-					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
-					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), null, dh.getThoiGianKhoiTao(),
-					null));
+					dh.getDiaChi(), null, dh.getDsHangHoa(), null, dh.getNguoiTraPhiShip(), dh.getPhiShip(),
+					dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(), dh.getTrangThai(), null,
+					dh.getThoiGianKhoiTao(), null));
 		});
 		return _dsDonHang;
 	}
@@ -107,14 +110,19 @@ public class DonHangServiceImpl implements DonHangService {
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Đơn hàng này!"));
 		Set<DonHangTramDTO> _dhttc = new HashSet<DonHangTramDTO>();
 		_donHang.getDsDonHangTram().forEach(e -> {
-			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(), e.getThoiGianKhoiTao(),
+			TramTrungChuyenDTO _ttcDTO = new TramTrungChuyenDTO(e.getTramTrungChuyen().getId(),
+					e.getTramTrungChuyen().getMaTram(), e.getTramTrungChuyen().getTenTram(),
+					e.getTramTrungChuyen().getDiaChi(), e.getTramTrungChuyen().getSdt(),
+					e.getTramTrungChuyen().getTrangThai(), e.getTramTrungChuyen().getMoTa(),
+					e.getTramTrungChuyen().getThoiGianKhoiTao());
+			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), _ttcDTO, e.getThoiGianKhoiTao(),
 					e.getTaoBoi()));
 		});
 		DonHangDTO _donHangDTO = new DonHangDTO(_donHang.getId(), _donHang.getMaDonHang(), _donHang.getTenNguoiNhan(),
 				_donHang.getSdtNguoiNhan(), _donHang.getDiaChi(), _donHang.getKhachHang(), _donHang.getDsHangHoa(),
 				_donHang.getShipper(), _donHang.getNguoiTraPhiShip(), _donHang.getPhiShip(),
 				_donHang.getTongTienThuHo(), _donHang.getGhiChu(), decompressBytes(_donHang.getAnhDinhKem()),
-				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(), _donHang.getTrangThaiDoiSoat(), _dhttc,
+				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(),  _dhttc,
 				_donHang.getThoiGianKhoiTao(), _donHang.getTaoBoi());
 		return _donHangDTO;
 	}
@@ -126,13 +134,13 @@ public class DonHangServiceImpl implements DonHangService {
 		dsDonHang.forEach(dh -> {
 			Set<DonHangTramDTO> dsDonHangTramDTO = new HashSet<>();
 			dh.getDsDonHangTram().forEach(e -> {
-				dsDonHangTramDTO.add(new DonHangTramDTO(e.getId(), e.getDonHang(), e.getTramTrungChuyen(),
+				dsDonHangTramDTO.add(new DonHangTramDTO(e.getId(), e.getDonHang(), null,
 						e.getThoiGianKhoiTao(), e.getTaoBoi()));
 			});
 			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
 					dh.getDiaChi(), dh.getKhachHang(), dh.getDsHangHoa(), dh.getShipper(), dh.getNguoiTraPhiShip(),
 					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
-					dh.getTrangThai(), dh.getTrangThaiDoiSoat(), dsDonHangTramDTO, dh.getThoiGianKhoiTao(),
+					dh.getTrangThai(),dsDonHangTramDTO, dh.getThoiGianKhoiTao(),
 					dh.getTaoBoi()));
 		});
 		return _dsDonHang;
@@ -172,7 +180,6 @@ public class DonHangServiceImpl implements DonHangService {
 			_donHang.setThoiGianDuKien(donHangTaoMoi.getThoiGianDuKien());
 			_donHang.setAnhDinhKem(compressBytes(fileAnhDinhKem.getBytes()));
 			_donHang.setTrangThai(ETrangThaiDonHang.Cho_xac_nhan);
-			_donHang.setTrangThaiDoiSoat("Chưa đối soát");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

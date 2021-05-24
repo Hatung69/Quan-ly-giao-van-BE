@@ -29,15 +29,15 @@ public class HangHoa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 100)
+	@Column(length = 150)
 	private String tenHang;
 	private double giaTri;
 	private int soLuong;
 	private int khoiLuong;
-	@Column(length = 200)
+	@Column(length = 300)
 	private String moTa;
 
-	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.DETACH})
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.DETACH })
 	@JoinColumn(name = "don_hang_id", nullable = false)
 	@JsonIgnore // Ko ingnore là lúc get nó bị lồng lồng nhau
 	private DonHang donHang;

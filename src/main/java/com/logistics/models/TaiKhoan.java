@@ -3,6 +3,7 @@ package com.logistics.models;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ public class TaiKhoan {
 	private String password;
 	private String email;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.DETACH)
 	@JoinTable(name = "taiKhoan_quyenHan", joinColumns = @JoinColumn(name = "tai_khoan_id"), inverseJoinColumns = @JoinColumn(name = "quyen_han_id"))
 	private Set<QuyenHan> quyenHan = new HashSet<QuyenHan>();
 

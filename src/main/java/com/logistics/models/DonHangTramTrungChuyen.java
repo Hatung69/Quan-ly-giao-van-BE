@@ -1,10 +1,7 @@
 package com.logistics.models;
 
 import java.util.Date;
-import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -24,13 +21,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity

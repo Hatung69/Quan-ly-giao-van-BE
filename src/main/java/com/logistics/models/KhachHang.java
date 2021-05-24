@@ -7,21 +7,15 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +27,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "khach_hang")
 public class KhachHang {
@@ -43,8 +36,6 @@ public class KhachHang {
 
 	@Column(length = 50)
 	private String tenKhachHang;
-	@Column(length = 100)
-	private String tenCuaHang;
 	@Column(length = 15)
 	private String sdt;
 	@Column(length = 300)
@@ -58,7 +49,7 @@ public class KhachHang {
 	@Column(length = 50)
 	private String loaiKhachHang;
 
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "khachHang", cascade = { CascadeType.DETACH })
+	@OneToMany(fetch = FetchType.LAZY,mappedBy = "khachHang", cascade = { CascadeType.REMOVE })
 	private Set<DonHang> dsDonHang = new HashSet<>();
 
 	// ----- Lưu giữ chung -----
@@ -66,13 +57,4 @@ public class KhachHang {
 	private Date thoiGianKhoiTao;
 	@UpdateTimestamp
 	private Date thoiGianCapNhat;
-	@ManyToOne
-	@JoinColumn(name = "tao_boi")
-	@CreatedBy
-	private NhanVien taoBoi;
-	@ManyToOne
-	@JoinColumn(name = "cap_nhat_boi")
-	@LastModifiedBy
-	private NhanVien capNhatBoi;
-
 }

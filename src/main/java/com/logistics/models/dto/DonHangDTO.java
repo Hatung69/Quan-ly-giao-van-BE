@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.logistics.models.DiaChiDonHang;
-import com.logistics.models.DonHangTramTrungChuyen;
 import com.logistics.models.HangHoa;
 import com.logistics.models.KhachHang;
 import com.logistics.models.NhanVien;
@@ -52,7 +51,6 @@ public class DonHangDTO {
 	private byte[] anhDinhKem;
 	private Date thoiGianDuKien;
 	private ETrangThaiDonHang trangThai;
-	private String trangThaiDoiSoat;
 	
 	private Set<DonHangTramDTO> dsDonHangTram = new HashSet<>();
 

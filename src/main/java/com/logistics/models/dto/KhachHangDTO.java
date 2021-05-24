@@ -16,7 +16,6 @@ import lombok.ToString;
 public class KhachHangDTO {
 	private Long id;
 	private String tenKhachHang;
-	private String tenCuaHang;
 	private String sdt;
 	private String diaChi;
 	private String email;

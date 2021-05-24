@@ -10,13 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -85,20 +82,19 @@ public class DonHang {
 	private double tongTienThuHo;
 
 	// ----- Thông tin phụ -----
-	@Column(length = 300)
-	private String ghiChu;
-	@Temporal(TemporalType.DATE)
-	private Date thoiGianDuKien;
 	@Column(name = "anh_dinh_kem", columnDefinition = "LONGBLOB")
 	private byte[] anhDinhKem;
 	@Enumerated(EnumType.STRING)
 	@Column(length = 50)
 	private ETrangThaiDonHang trangThai;
-	@Column(length = 50)
-	private String trangThaiDoiSoat;
+	@Column(length = 300)
+	private String ghiChu;
+	
+	@Temporal(TemporalType.DATE)
+	private Date thoiGianDuKien;
 
 	// ----- Trạm trung chuyển -----
-	@OneToMany(mappedBy = "donHang", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "donHang", cascade = {CascadeType.ALL})
 	private Set<DonHangTramTrungChuyen> dsDonHangTram = new HashSet<>();
 
 	// ----- Lưu giữ chung -----

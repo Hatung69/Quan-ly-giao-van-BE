@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.logistics.models.NhanVien;
 import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.NhanVienDTO;
+import com.logistics.models.dto.TramTrungChuyenDTO;
 import com.logistics.services.NhanVienService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -64,22 +65,28 @@ public class NhanVienController {
 
 	}
 
-	// Lấy ID Trạm trung chuyển từ nhân viên  theo Id Tài khoản
+	// Lấy ID Trạm trung chuyển từ nhân viên theo Id Tài khoản
 	@GetMapping("/nhan-vien/tai-khoan/{idTaiKhoan}")
 	@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
-	public ResponseEntity<TramTrungChuyen> layIDTramTTCTheoIDTaiKHoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
+	public ResponseEntity<TramTrungChuyenDTO> layIDTramTTCTheoIDTaiKHoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
 		try {
 			NhanVien _nhanVien = nhanVienService.layNhanVienTheoIDAcc(idTaiKhoan);
 			if (_nhanVien == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<>(_nhanVien.getTramTrungChuyen(), HttpStatus.OK);
+			TramTrungChuyenDTO _chuyenDTO = new TramTrungChuyenDTO(_nhanVien.getTramTrungChuyen().getId(),
+					_nhanVien.getTramTrungChuyen().getMaTram(), _nhanVien.getTramTrungChuyen().getTenTram(),
+					_nhanVien.getTramTrungChuyen().getDiaChi(), _nhanVien.getTramTrungChuyen().getSdt(),
+					_nhanVien.getTramTrungChuyen().getTrangThai(), _nhanVien.getTramTrungChuyen().getMoTa(),
+					_nhanVien.getTramTrungChuyen().getThoiGianKhoiTao());
+			return new ResponseEntity<>(_chuyenDTO, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}
-	// Lấy nhân viên  theo Id Tài khoản
+
+	// Lấy nhân viên theo Id Tài khoản
 	@GetMapping("/nhan-vien/tai-khoan-id/{idTaiKhoan}")
 	@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
 	public ResponseEntity<NhanVien> layNhanVienIDTaiKHoan(@PathVariable("idTaiKhoan") Long idTaiKhoan) {
@@ -100,6 +107,7 @@ public class NhanVienController {
 	public ResponseEntity<NhanVien> taoNhanVien(@RequestParam("infoNhanVien") String nhanVien,
 			@RequestParam(name = "avatarFile", required = false) MultipartFile avatarFile) {
 		try {
+			System.out.println(nhanVien);
 			Gson gson = new Gson();
 			NhanVienDTO _nhanVienDTO = gson.fromJson(nhanVien, NhanVienDTO.class);
 			return new ResponseEntity<>(nhanVienService.taoMoiNhanVien(_nhanVienDTO, avatarFile), HttpStatus.CREATED);

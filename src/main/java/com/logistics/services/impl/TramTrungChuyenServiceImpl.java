@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.TramTrungChuyenDTO;
+import com.logistics.models.enu.ETrangThaiTram;
 import com.logistics.repositories.TramTrungChuyenRepository;
 import com.logistics.services.TramTrungChuyenService;
 
@@ -42,8 +43,8 @@ public class TramTrungChuyenServiceImpl implements TramTrungChuyenService {
 	public TramTrungChuyen taoMoiTramTrungChuyen(TramTrungChuyenDTO tramTrungChuyenTaoMoi) {
 		String maTram = "TTC-" + RandomString.make(10);
 		TramTrungChuyen _tramTrungChuyen = new TramTrungChuyen(null, maTram, tramTrungChuyenTaoMoi.getTenTram(),
-				tramTrungChuyenTaoMoi.getDiaChi(), tramTrungChuyenTaoMoi.getTrangThai(),
-				tramTrungChuyenTaoMoi.getMoTa(), null, null, null, null, null, null);
+				tramTrungChuyenTaoMoi.getDiaChi(), tramTrungChuyenTaoMoi.getSdt(), ETrangThaiTram.Dang_hoat_dong,
+				tramTrungChuyenTaoMoi.getMoTa(), null, null, null, null);
 		return tramTrungChuyenRepository.save(_tramTrungChuyen);
 	}
 
@@ -53,6 +54,7 @@ public class TramTrungChuyenServiceImpl implements TramTrungChuyenService {
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy trạm!"));
 		_tramTrungChuyen.setTenTram(tramTrungChuyenCapNhat.getTenTram());
 		_tramTrungChuyen.setDiaChi(tramTrungChuyenCapNhat.getDiaChi());
+		_tramTrungChuyen.setSdt(tramTrungChuyenCapNhat.getSdt());
 		_tramTrungChuyen.setTrangThai(tramTrungChuyenCapNhat.getTrangThai());
 		_tramTrungChuyen.setMoTa(tramTrungChuyenCapNhat.getMoTa());
 

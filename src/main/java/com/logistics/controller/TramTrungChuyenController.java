@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.logistics.models.KhachHang;
 import com.logistics.models.TramTrungChuyen;
-import com.logistics.models.dto.KhachHangDTO;
 import com.logistics.models.dto.TramTrungChuyenDTO;
-import com.logistics.services.KhachHangService;
 import com.logistics.services.TramTrungChuyenService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)

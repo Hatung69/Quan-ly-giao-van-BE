@@ -23,6 +23,7 @@ public class TramTrungChuyenDTO {
 	private String maTram;
 	private String tenTram;
 	private String diaChi;
+	private String sdt;
 	private ETrangThaiTram trangThai;
 	private String moTa;
 

@@ -10,15 +10,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class DonHangTramDTO {
 	private Long id;
 	private DonHang donHang;
-	private TramTrungChuyen tramTrungChuyen;
+	private TramTrungChuyenDTO tramTrungChuyen;
 
 	private Date thoiGianKhoiTao;
 	private NhanVien taoBoi;

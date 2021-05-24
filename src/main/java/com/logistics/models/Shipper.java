@@ -7,23 +7,17 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.logistics.models.enu.ETrangThaiShipper;
 
@@ -37,7 +31,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "shipper")
 public class Shipper {
@@ -59,7 +52,7 @@ public class Shipper {
 	@Column(length = 50)
 	private ETrangThaiShipper trangThai;
 
-	@OneToMany(fetch = FetchType.LAZY,mappedBy = "shipper", cascade = { CascadeType.DETACH })
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "shipper", cascade = { CascadeType.DETACH })
 	private Set<DonHang> dsDonHang = new HashSet<>();
 
 	// ----- Lưu giữ chung -----
@@ -67,13 +60,4 @@ public class Shipper {
 	private Date thoiGianKhoiTao;
 	@UpdateTimestamp
 	private Date thoiGianCapNhat;
-	@ManyToOne
-	@JoinColumn(name = "tao_boi")
-	@CreatedBy
-	private NhanVien taoBoi;
-	@ManyToOne
-	@JoinColumn(name = "cap_nhat_boi")
-	@LastModifiedBy
-	private NhanVien capNhatBoi;
-
 }

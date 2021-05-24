@@ -1,6 +1,5 @@
 package com.logistics.controller;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +29,6 @@ import com.logistics.models.DonHangTramTrungChuyen;
 import com.logistics.models.Shipper;
 import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.DonHangDTO;
-import com.logistics.models.dto.ShipperDTO;
 import com.logistics.models.enu.ETrangThaiDonHang;
 import com.logistics.models.enu.ETrangThaiShipper;
 import com.logistics.services.DonHangService;
@@ -164,8 +162,10 @@ public class DonHangController {
 				temp = false;
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			DonHangTramTrungChuyen _donHangTramTrungChuyen = new DonHangTramTrungChuyen(null, _donHang,
-					_tramTrungChuyen, null, null);
+			DonHangTramTrungChuyen _donHangTramTrungChuyen= new DonHangTramTrungChuyen();
+			_donHangTramTrungChuyen.setDonHang(_donHang);
+			_donHangTramTrungChuyen.setTramTrungChuyen(_tramTrungChuyen);
+			
 			_donHang.themDonHangTramTrungChuyen(_donHangTramTrungChuyen);
 			donHangService.save(_donHang);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -345,20 +345,20 @@ public class DonHangController {
 		}
 	}
 
-	// Tổng thống kê
-	@GetMapping("/don-hang/thong-ke")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Map<String, Integer>> tongThongKe() {
-		try {
-			Map<String, Integer> _obj = donHangService.tongThongKe();
-			if (_obj == null) {
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			return new ResponseEntity<>(_obj, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
+//	// Tổng thống kê
+//	@GetMapping("/don-hang/thong-ke")
+//	@PreAuthorize("hasRole('ADMIN')")
+//	public ResponseEntity<Map<String, Integer>> tongThongKe() {
+//		try {
+//			Map<String, Integer> _obj = donHangService.tongThongKe();
+//			if (_obj == null) {
+//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//			}
+//			return new ResponseEntity<>(_obj, HttpStatus.OK);
+//		} catch (Exception e) {
+//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+//	}
 
 	// Thống kê theo thời gian
 	@GetMapping("/don-hang/thong-ke/{batDau}/{ketThuc}")

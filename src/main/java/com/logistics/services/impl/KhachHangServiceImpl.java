@@ -23,7 +23,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 		List<KhachHang> dsKhachHang = khachHangRepository.findAllByOrderByThoiGianKhoiTaoDesc();
 		List<KhachHangDTO> _dsKhachHang = new ArrayList<KhachHangDTO>();
 		dsKhachHang.forEach(kh -> {
-			_dsKhachHang.add(new KhachHangDTO(kh.getId(), kh.getTenKhachHang(), kh.getTenCuaHang(), kh.getSdt(),
+			_dsKhachHang.add(new KhachHangDTO(kh.getId(), kh.getTenKhachHang(), kh.getSdt(),
 					kh.getDiaChi(), kh.getEmail(), kh.getCmnd(), kh.getSoTaiKhoan(), kh.getDsDonHang().size(),
 					kh.getLoaiKhachHang(), kh.getThoiGianCapNhat()));
 		});
@@ -35,7 +35,7 @@ public class KhachHangServiceImpl implements KhachHangService {
 		List<KhachHang> dsKhachHang = khachHangRepository.timeKiemKhachHang(keySearch);
 		List<KhachHangDTO> _dsKhachHang = new ArrayList<KhachHangDTO>();
 		dsKhachHang.forEach(kh -> {
-			_dsKhachHang.add(new KhachHangDTO(kh.getId(), kh.getTenKhachHang(), kh.getTenCuaHang(), kh.getSdt(),
+			_dsKhachHang.add(new KhachHangDTO(kh.getId(), kh.getTenKhachHang(), kh.getSdt(),
 					kh.getDiaChi(), kh.getEmail(), kh.getCmnd(), kh.getSoTaiKhoan(), kh.getDsDonHang().size(),
 					kh.getLoaiKhachHang(), kh.getThoiGianCapNhat()));
 		});
@@ -51,10 +51,10 @@ public class KhachHangServiceImpl implements KhachHangService {
 
 	@Override
 	public KhachHang taoMoiKhachHang(KhachHangDTO khachHangTaoMoi) {
-		KhachHang _khachHang = new KhachHang(null, khachHangTaoMoi.getTenKhachHang(), khachHangTaoMoi.getTenCuaHang(),
+		KhachHang _khachHang = new KhachHang(null, khachHangTaoMoi.getTenKhachHang(), 
 				khachHangTaoMoi.getSdt(), khachHangTaoMoi.getDiaChi(), khachHangTaoMoi.getEmail(),
 				khachHangTaoMoi.getCmnd(), khachHangTaoMoi.getSoTaiKhoan(), khachHangTaoMoi.getLoaiKhachHang(), null,
-				null, null, null, null);
+				null, null);
 		return khachHangRepository.save(_khachHang);
 	}
 
@@ -63,7 +63,6 @@ public class KhachHangServiceImpl implements KhachHangService {
 		KhachHang _khaHang = khachHangRepository.findById(idKhachHang)
 				.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy Khách hàng này!"));
 		_khaHang.setTenKhachHang(khachHangCapNhat.getTenKhachHang());
-		_khaHang.setTenCuaHang(khachHangCapNhat.getTenCuaHang());
 		_khaHang.setSdt(khachHangCapNhat.getSdt());
 		_khaHang.setDiaChi(khachHangCapNhat.getDiaChi());
 		_khaHang.setEmail(khachHangCapNhat.getEmail());

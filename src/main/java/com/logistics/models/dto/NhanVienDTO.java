@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 
 import com.logistics.models.TaiKhoan;
 import com.logistics.models.TramTrungChuyen;
+import com.logistics.models.enu.EQuyenHan;
 import com.logistics.models.enu.ETrangThaiNhanVien;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +30,8 @@ public class NhanVienDTO {
 	private Date ngaySinh;
 	private ETrangThaiNhanVien trangThai;
 	private Date lanCuoiDangNhap;
-	private Long idTram;;
+	private String maTram;;
 	
+	private String quyenHan;
 	private TaiKhoan taiKhoan;
 }
