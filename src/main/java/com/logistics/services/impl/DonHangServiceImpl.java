@@ -41,7 +41,7 @@ public class DonHangServiceImpl implements DonHangService {
 	public Map<String, Integer> tongThongKe() {
 		List<Integer[]> _obj = donHangRepository.tongThongKe();
 		Map<String, Integer> _listTong = new HashMap<>();
-		_listTong.put("TongDH", _obj.get(0)[0]);
+		_listTong.put("TongTram", _obj.get(0)[0]);
 		_listTong.put("TongKH", _obj.get(0)[1]);
 		_listTong.put("TongShipper", _obj.get(0)[2]);
 		_listTong.put("TongNhanVien", _obj.get(0)[3]);

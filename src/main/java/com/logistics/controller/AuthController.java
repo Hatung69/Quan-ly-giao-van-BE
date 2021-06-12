@@ -122,7 +122,6 @@ public class AuthController {
 	@GetMapping("/xac-nhan/{username}")
 	public ResponseEntity<String> xacNhanLayLaiMatKhau(@PathVariable("username") String username) {
 		String newPassword = RandomString.make(10);
-		System.out.println(username);
 		Optional<TaiKhoan> _taiKhoan = taiKhoanRepository.findByUsername(username);
 		if (!_taiKhoan.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

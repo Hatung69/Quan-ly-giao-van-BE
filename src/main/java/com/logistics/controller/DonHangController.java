@@ -345,20 +345,20 @@ public class DonHangController {
 		}
 	}
 
-//	// Tổng thống kê
-//	@GetMapping("/don-hang/thong-ke")
-//	@PreAuthorize("hasRole('ADMIN')")
-//	public ResponseEntity<Map<String, Integer>> tongThongKe() {
-//		try {
-//			Map<String, Integer> _obj = donHangService.tongThongKe();
-//			if (_obj == null) {
-//				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//			}
-//			return new ResponseEntity<>(_obj, HttpStatus.OK);
-//		} catch (Exception e) {
-//			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
+	// Tổng thống kê
+	@GetMapping("/don-hang/thong-ke")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Map<String, Integer>> tongThongKe() {
+		try {
+			Map<String, Integer> _obj = donHangService.tongThongKe();
+			if (_obj == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<>(_obj, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
 	// Thống kê theo thời gian
 	@GetMapping("/don-hang/thong-ke/{batDau}/{ketThuc}")
