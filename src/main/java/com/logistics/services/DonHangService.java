@@ -23,7 +23,7 @@ public interface DonHangService {
 	List<DonHangDTO> thongKeTheoThoiGian(Date batDau, Date ketThuc);
 
 	// Tạo mới đơn hàng
-	public DonHang taoMoiDonHang(DonHangDTO donHangTaoMoi, MultipartFile fileAnhDinhKem);
+	public DonHang taoMoiDonHang(DonHangDTO donHangTaoMoi, MultipartFile fileAnhDinhKem, Long idTram);
 
 	// Cập nhật đơn hàng
 	public DonHang capNhatDonHang(DonHangDTO donHangCapNhat, MultipartFile fileAnhDinhKem, Long idDonHang);

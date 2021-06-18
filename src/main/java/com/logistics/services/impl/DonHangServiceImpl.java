@@ -19,13 +19,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.logistics.models.DonHang;
+import com.logistics.models.DonHangTramTrungChuyen;
 import com.logistics.models.KhachHang;
+import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.DonHangDTO;
 import com.logistics.models.dto.DonHangTramDTO;
 import com.logistics.models.dto.TramTrungChuyenDTO;
 import com.logistics.models.enu.ETrangThaiDonHang;
 import com.logistics.repositories.DonHangRepository;
 import com.logistics.repositories.KhachHangRepository;
+import com.logistics.repositories.TramTrungChuyenRepository;
 import com.logistics.services.DonHangService;
 
 import net.bytebuddy.utility.RandomString;
@@ -37,6 +40,8 @@ public class DonHangServiceImpl implements DonHangService {
 	private DonHangRepository donHangRepository;
 	@Autowired
 	private KhachHangRepository khachHangRepository;
+	@Autowired
+	private TramTrungChuyenRepository tramTrungChuyenRepository;
 
 	public Map<String, Integer> tongThongKe() {
 		List<Integer[]> _obj = donHangRepository.tongThongKe();
@@ -115,15 +120,14 @@ public class DonHangServiceImpl implements DonHangService {
 					e.getTramTrungChuyen().getDiaChi(), e.getTramTrungChuyen().getSdt(),
 					e.getTramTrungChuyen().getTrangThai(), e.getTramTrungChuyen().getMoTa(),
 					e.getTramTrungChuyen().getThoiGianKhoiTao());
-			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), _ttcDTO, e.getThoiGianKhoiTao(),
-					e.getTaoBoi()));
+			_dhttc.add(new DonHangTramDTO(e.getId(), e.getDonHang(), _ttcDTO, e.getThoiGianKhoiTao(), e.getTaoBoi()));
 		});
 		DonHangDTO _donHangDTO = new DonHangDTO(_donHang.getId(), _donHang.getMaDonHang(), _donHang.getTenNguoiNhan(),
 				_donHang.getSdtNguoiNhan(), _donHang.getDiaChi(), _donHang.getKhachHang(), _donHang.getDsHangHoa(),
 				_donHang.getShipper(), _donHang.getNguoiTraPhiShip(), _donHang.getPhiShip(),
 				_donHang.getTongTienThuHo(), _donHang.getGhiChu(), decompressBytes(_donHang.getAnhDinhKem()),
-				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(),  _dhttc,
-				_donHang.getThoiGianKhoiTao(), _donHang.getTaoBoi());
+				_donHang.getThoiGianDuKien(), _donHang.getTrangThai(), _dhttc, _donHang.getThoiGianKhoiTao(),
+				_donHang.getTaoBoi());
 		return _donHangDTO;
 	}
 
@@ -134,14 +138,13 @@ public class DonHangServiceImpl implements DonHangService {
 		dsDonHang.forEach(dh -> {
 			Set<DonHangTramDTO> dsDonHangTramDTO = new HashSet<>();
 			dh.getDsDonHangTram().forEach(e -> {
-				dsDonHangTramDTO.add(new DonHangTramDTO(e.getId(), e.getDonHang(), null,
-						e.getThoiGianKhoiTao(), e.getTaoBoi()));
+				dsDonHangTramDTO.add(
+						new DonHangTramDTO(e.getId(), e.getDonHang(), null, e.getThoiGianKhoiTao(), e.getTaoBoi()));
 			});
 			_dsDonHang.add(new DonHangDTO(dh.getId(), dh.getMaDonHang(), dh.getTenNguoiNhan(), dh.getSdtNguoiNhan(),
 					dh.getDiaChi(), dh.getKhachHang(), dh.getDsHangHoa(), dh.getShipper(), dh.getNguoiTraPhiShip(),
 					dh.getPhiShip(), dh.getTongTienThuHo(), dh.getGhiChu(), null, dh.getThoiGianDuKien(),
-					dh.getTrangThai(),dsDonHangTramDTO, dh.getThoiGianKhoiTao(),
-					dh.getTaoBoi()));
+					dh.getTrangThai(), dsDonHangTramDTO, dh.getThoiGianKhoiTao(), dh.getTaoBoi()));
 		});
 		return _dsDonHang;
 	}
@@ -153,7 +156,7 @@ public class DonHangServiceImpl implements DonHangService {
 		+ Set<HangHoa>
 		+ Shipper
 	*/
-	public DonHang taoMoiDonHang(DonHangDTO donHangTaoMoi, MultipartFile fileAnhDinhKem) {
+	public DonHang taoMoiDonHang(DonHangDTO donHangTaoMoi, MultipartFile fileAnhDinhKem, Long idTram) {
 		String maDonHang = "DH-" + RandomString.make(10);
 		Optional<KhachHang> _khachHang = khachHangRepository.findBySdt(donHangTaoMoi.getKhachHang().getSdt());
 		DonHang _donHang = new DonHang();
@@ -180,10 +183,19 @@ public class DonHangServiceImpl implements DonHangService {
 			_donHang.setThoiGianDuKien(donHangTaoMoi.getThoiGianDuKien());
 			_donHang.setAnhDinhKem(compressBytes(fileAnhDinhKem.getBytes()));
 			_donHang.setTrangThai(ETrangThaiDonHang.Cho_xac_nhan);
+			
+			DonHang _dh = donHangRepository.save(_donHang);
+			TramTrungChuyen _tramTrungChuyen = tramTrungChuyenRepository.findById(idTram)
+					.orElseThrow(() -> new RuntimeException("Error: Không tìm thấy trạm!"));
+			DonHangTramTrungChuyen _donHangTramTrungChuyen = new DonHangTramTrungChuyen();
+			_donHangTramTrungChuyen.setDonHang(_dh);
+			_donHangTramTrungChuyen.setTramTrungChuyen(_tramTrungChuyen);
+			_donHang.themDonHangTramTrungChuyen(_donHangTramTrungChuyen);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return donHangRepository.save(_donHang);
+//		return null;
 	}
 
 	@Override

@@ -110,14 +110,15 @@ public class DonHangController {
 	@PostMapping(value = "/don-hang", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@PreAuthorize("hasRole('EMPLOYEE') or hasRole('ADMIN')")
 	public ResponseEntity<DonHang> taoDonHang(@RequestParam("infoDonHang") String donHangTaoMoi,
-			@RequestParam(name = "fileAnhDinhKem", required = false) MultipartFile fileAnhDinhKem) {
+			@RequestParam(name = "fileAnhDinhKem", required = false) MultipartFile fileAnhDinhKem,
+			@RequestParam(name = "idTram") Long idTram) {
 		try {
 			Gson gson = new Gson();
 			DonHangDTO _donHangDTO = gson.fromJson(donHangTaoMoi, DonHangDTO.class);
 			_donHangDTO.getDsHangHoa().forEach(d -> {
 				d.getTenHang();
 			});
-			return new ResponseEntity<>(donHangService.taoMoiDonHang(_donHangDTO, fileAnhDinhKem), HttpStatus.CREATED);
+			return new ResponseEntity<>(donHangService.taoMoiDonHang(_donHangDTO, fileAnhDinhKem,idTram), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -162,10 +163,10 @@ public class DonHangController {
 				temp = false;
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			}
-			DonHangTramTrungChuyen _donHangTramTrungChuyen= new DonHangTramTrungChuyen();
+			DonHangTramTrungChuyen _donHangTramTrungChuyen = new DonHangTramTrungChuyen();
 			_donHangTramTrungChuyen.setDonHang(_donHang);
 			_donHangTramTrungChuyen.setTramTrungChuyen(_tramTrungChuyen);
-			
+
 			_donHang.themDonHangTramTrungChuyen(_donHangTramTrungChuyen);
 			donHangService.save(_donHang);
 			return new ResponseEntity<>(HttpStatus.OK);
