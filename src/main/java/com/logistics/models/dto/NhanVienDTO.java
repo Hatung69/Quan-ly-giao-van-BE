@@ -2,12 +2,7 @@ package com.logistics.models.dto;
 
 import java.util.Date;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 import com.logistics.models.TaiKhoan;
-import com.logistics.models.TramTrungChuyen;
-import com.logistics.models.enu.EQuyenHan;
 import com.logistics.models.enu.ETrangThaiNhanVien;
 
 import lombok.AllArgsConstructor;

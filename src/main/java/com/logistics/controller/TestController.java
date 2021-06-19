@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 	@GetMapping("/all")
 	public String allAccess() {
-		return "Nội dung này là cho khách vãng lai có thể có xem";
+		return "OK Ngon lành cành đào !";
 	}
 
 	@GetMapping("/employee")

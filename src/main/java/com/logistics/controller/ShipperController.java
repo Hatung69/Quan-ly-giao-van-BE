@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logistics.models.Shipper;
-import com.logistics.models.dto.KhachHangDTO;
 import com.logistics.models.dto.ShipperDTO;
 import com.logistics.services.ShipperService;
 

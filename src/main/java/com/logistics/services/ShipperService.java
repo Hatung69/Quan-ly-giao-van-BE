@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.logistics.models.Shipper;
-import com.logistics.models.dto.KhachHangDTO;
 import com.logistics.models.dto.ShipperDTO;
 
 public interface ShipperService {

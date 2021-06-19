@@ -21,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.google.gson.Gson;
 import com.logistics.models.NhanVien;
-import com.logistics.models.TramTrungChuyen;
 import com.logistics.models.dto.NhanVienDTO;
 import com.logistics.models.dto.TramTrungChuyenDTO;
 import com.logistics.services.NhanVienService;
