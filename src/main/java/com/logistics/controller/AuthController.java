@@ -57,6 +57,17 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 
+	// Thêm vào 2 cái quyền nó mới cho tạo Tài khoản
+	@GetMapping("/add-role")
+	public ResponseEntity<?> addRole() {
+		QuyenHan employeeRole = new QuyenHan(null, EQuyenHan.ROLE_EMPLOYEE, "Nhân viên trong hệ thống");
+		QuyenHan adminRole = new QuyenHan(null, EQuyenHan.ROLE_ADMIN, "Quản lý trong hệ thống");
+		quyenHanRepository.save(employeeRole);
+		quyenHanRepository.save(adminRole);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	// Đăng nhập
 	@PostMapping("/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody SigninRequest loginRequest) {
@@ -130,16 +141,17 @@ public class AuthController {
 		taiKhoanRepository.save(_taiKhoan.get());
 		return new ResponseEntity<String>(newPassword, HttpStatus.OK);
 	}
-	
+
 	// Thayn đổi mật khẩu
 	@GetMapping("/thay-doi/{username}/{newpassword}")
-	public ResponseEntity<?> layLaiMatKhau(@PathVariable("username") String username,@PathVariable("newpassword") String newpassword) {
+	public ResponseEntity<?> layLaiMatKhau(@PathVariable("username") String username,
+			@PathVariable("newpassword") String newpassword) {
 		Optional<TaiKhoan> _taiKhoan = taiKhoanRepository.findByUsername(username);
 		if (!_taiKhoan.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		_taiKhoan.get().setPassword(encoder.encode(newpassword));
 		taiKhoanRepository.save(_taiKhoan.get());
-		return new ResponseEntity<>( HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
